@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-const createBasketTable = async () => {
+export const createBasketTable = async () => {
   const db_client = await pool.connect();
   try {
     await db_client.query(`
@@ -18,4 +18,17 @@ const createBasketTable = async () => {
   }
 };
 
-export default createBasketTable;
+export const addColumnBasketTable = async () => {
+  const db_client = await pool.connect();
+  try {
+    await db_client.query(`
+      ALTER TABLE basket ADD COLUMN IF NOT EXISTS is_purchased BOOLEAN DEFAULT FALSE;
+    `);
+    console.log('is_purchased column added to basket table');
+  } catch (error) {
+    console.error("Error adding is_purchased column to basket table:", error);
+  } finally {
+    db_client.release();
+  }
+};
+

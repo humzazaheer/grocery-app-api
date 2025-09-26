@@ -55,6 +55,26 @@ export const updateBasketService = async (itemData) => {
   }
 }
 
+export const isPurchasedBasketService = async (id) => {
+  const db_client = await pool.connect();
+  
+  const query = `UPDATE basket SET is_purchased = true WHERE id = $1 RETURNING *`;
+  try {
+    const updatedRecord = await db_client.query(query, [id]);
+    if (updatedRecord.rowCount === 0) {
+      throw new Error('Item not found');
+    }
+    return updatedRecord.rows[0];
+  }
+  catch(error) {
+    console.log('Unable to update item: ', error.message);
+    throw error;
+  }
+  finally {
+    db_client.release();
+  }
+}
+
 export const getAllItemsService = async () => {
   const db_client = await pool.connect();
   const query = `SELECT * FROM basket`;

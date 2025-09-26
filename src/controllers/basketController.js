@@ -1,5 +1,5 @@
 import { getAllItemsService } from "../services/basketService.js";
-import { createBasketService, deleteBasketService, updateBasketService } from "../services/basketService.js";
+import { createBasketService, deleteBasketService, updateBasketService , isPurchasedBasketService} from "../services/basketService.js";
 
 const handleResponse = (res, status, message, data = null) => {
   res.status(status).json({ status, message, data });
@@ -22,4 +22,9 @@ export const updateBasketController = async (req, res) => {
   const { name, quantity } = req.body;
   const updatedItem = await updateBasketService({id, name, quantity});
     handleResponse(res, 200 , 'Item updated successfully', updatedItem);
+}
+export const isPurchasedBasketController = async (req, res) => {
+  const { id } = req.params;
+  const updatedItem = await isPurchasedBasketService(id);
+    handleResponse(res, 200 , 'Item status updated successfully', updatedItem);
 }
